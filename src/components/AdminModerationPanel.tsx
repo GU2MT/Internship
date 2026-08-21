@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useCctv } from '../context/CctvContext';
+import type { CctvCamera } from '../types/cctv';
 import { 
   ShieldAlert, 
   CheckCircle2, 
@@ -18,7 +19,7 @@ export const AdminModerationPanel: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('pending');
   const [search, setSearch] = useState('');
 
-  const filteredCameras = cameras.filter(cam => {
+  const filteredCameras = cameras.filter((cam: CctvCamera) => {
     const status = cam.approvalStatus || 'approved';
     if (filter !== 'all' && status !== filter) return false;
     if (search) {
@@ -33,7 +34,7 @@ export const AdminModerationPanel: React.FC = () => {
     return true;
   });
 
-  const pendingCount = cameras.filter(c => (c.approvalStatus || 'approved') === 'pending').length;
+  const pendingCount = cameras.filter((c: CctvCamera) => (c.approvalStatus || 'approved') === 'pending').length;
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
@@ -71,7 +72,7 @@ export const AdminModerationPanel: React.FC = () => {
               {tab === 'pending' && '⏳ '}
               {tab === 'approved' && '🟢 '}
               {tab === 'rejected' && '🔴 '}
-              {tab} ({cameras.filter(c => (c.approvalStatus || 'approved') === tab || (tab === 'all')).length})
+              {tab} ({cameras.filter((c: CctvCamera) => tab === 'all' || (c.approvalStatus || 'approved') === tab).length})
             </button>
           ))}
         </div>
@@ -83,7 +84,7 @@ export const AdminModerationPanel: React.FC = () => {
             className="form-input"
             placeholder="Search pending cameras..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
             style={{ paddingLeft: '2.4rem' }}
           />
         </div>
