@@ -1,5 +1,6 @@
 import React from 'react';
 import { CctvProvider, useCctv } from './context/CctvContext';
+import { LanguageProvider } from './context/LanguageContext';
 import { Navbar } from './components/Navbar';
 import { GisMap } from './components/GisMap';
 import { CameraRegistrationForm } from './components/CameraRegistrationForm';
@@ -12,7 +13,6 @@ import { CheckCircle2, Info, AlertTriangle } from 'lucide-react';
 
 const AppContent: React.FC = () => {
   const { currentUser, activeTab, setActiveTab, userRole, toastMessage, showToast } = useCctv();
-
 
   // Guard active tab if public user attempts to access admin features directly
   React.useEffect(() => {
@@ -58,9 +58,15 @@ const AppContent: React.FC = () => {
 
 export function App() {
   return (
-    <CctvProvider>
-      <AppContent />
-    </CctvProvider>
+    <LanguageProvider>
+      <CctvProvider>
+        <AppContent />
+      </CctvProvider>
+    </LanguageProvider>
+  );
+}
+
+export default App;
   );
 }
 
