@@ -196,9 +196,20 @@ export const Navbar: React.FC = () => {
           {/* Right Section: Language Switcher & Auth */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             
-            {/* Language Selection Dropdown */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.3rem 0.6rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-              <Languages size={16} color="var(--primary-cyan)" />
+            {/* Quick Telemetry Pills */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem' }} className="desktop-only">
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#93c5fd' }}>
+                <Camera size={13} /> {t('public')}: {publicCamerasCount}
+              </span>
+              <span style={{ color: 'var(--border-color)' }}>|</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#d8b4fe' }}>
+                <Camera size={13} /> {t('private')}: {privateCamerasCount}
+              </span>
+            </div>
+
+            {/* Language Selection Dropdown (Sign In ጎን እንዲሆን የተስተካከለ) */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.08)', padding: '0.35rem 0.6rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+              <Languages size={16} color="#38bdf8" />
               <select 
                 value={language}
                 onChange={(e) => setLanguage(e.target.value as any)}
@@ -212,21 +223,10 @@ export const Navbar: React.FC = () => {
                   fontWeight: 600
                 }}
               >
-                <option value="en" style={{ background: '#111827' }}>EN</option>
-                <option value="am" style={{ background: '#111827' }}>አማ</option>
-                <option value="om" style={{ background: '#111827' }}>ORM</option>
+                <option value="en" style={{ background: '#111827', color: '#fff' }}>English</option>
+                <option value="am" style={{ background: '#111827', color: '#fff' }}>አማርኛ</option>
+                <option value="om" style={{ background: '#111827', color: '#fff' }}>Afaan Oromoo</option>
               </select>
-            </div>
-
-            {/* Quick Telemetry Pills */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem' }} className="desktop-only">
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#93c5fd' }}>
-                <Camera size={13} /> {t('public')}: {publicCamerasCount}
-              </span>
-              <span style={{ color: 'var(--border-color)' }}>|</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#d8b4fe' }}>
-                <Camera size={13} /> {t('private')}: {privateCamerasCount}
-              </span>
             </div>
 
             {/* Authenticated User Account Button Group */}
