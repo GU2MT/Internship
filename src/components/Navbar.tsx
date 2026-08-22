@@ -285,12 +285,3 @@ export const Navbar: React.FC = () => {
     </>
   );
 };
-
-
-      {/* Global Auth Modal */}
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
-    </>
-  );
-};
-
-
