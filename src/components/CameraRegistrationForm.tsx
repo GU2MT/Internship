@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useCctv } from '../context/CctvContext';
+import { useLanguage } from '../context/LanguageContext';
 import type { OwnershipType, CameraType, Resolution, CameraStatus } from '../types/cctv';
 import { 
   Shield, 
@@ -17,8 +18,10 @@ import {
 
 export const CameraRegistrationForm: React.FC = () => {
   const { addCamera, setActiveTab, setSelectedCamera, userRole, dbConnectionStatus, currentUser } = useCctv();
+  const { t } = useLanguage();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
+
 
   // Form State
   const [ownership, setOwnership] = useState<OwnershipType>(userRole === 'private_owner' ? 'private' : 'public');
@@ -100,17 +103,17 @@ export const CameraRegistrationForm: React.FC = () => {
       {/* Container Panel */}
       <div className="glass-panel" style={{ padding: '2rem' }}>
         
-        {/* Title */}
+                {/* Title */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>
           <div>
             <span className="badge badge-public" style={{ marginBottom: '0.4rem' }}>
-              ONLINE PAPERLESS TRANSITION
+              {t('online_transition')}
             </span>
             <h2 style={{ fontSize: '1.5rem', background: 'linear-gradient(90deg, #ffffff, #93c5fd)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              CCTV Camera Digital Registration Form
+              {t('registration_title')}
             </h2>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              Register municipal or private security cameras into the centralized GIS surveillance database.
+              {t('registration_subtitle')}
             </p>
           </div>
 
@@ -134,7 +137,7 @@ export const CameraRegistrationForm: React.FC = () => {
         }}>
           <Database size={18} />
           <div>
-            <strong>Storage Target: </strong>
+            <strong>{t('storage_target')}: </strong>
             {dbConnectionStatus === 'connected' ? (
               <span>Registered cameras will be persisted directly to <strong>Supabase PostgreSQL Database</strong> (Table: <code>cameras</code>) with Realtime broadcast.</span>
             ) : (
@@ -147,17 +150,17 @@ export const CameraRegistrationForm: React.FC = () => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem', background: 'rgba(11, 15, 25, 0.6)', padding: '0.85rem 1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: step >= 1 ? 1 : 0.4 }}>
             <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: step === 1 ? 'var(--primary-blue)' : 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.85rem' }}>1</span>
-            <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Ownership & Contact</span>
+            <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{t('step1_title')}</span>
           </div>
           <ArrowRight size={16} color="var(--text-dim)" />
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: step >= 2 ? 1 : 0.4 }}>
             <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: step === 2 ? 'var(--primary-blue)' : 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.85rem' }}>2</span>
-            <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>GIS Location & FOV</span>
+            <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{t('step2_title')}</span>
           </div>
           <ArrowRight size={16} color="var(--text-dim)" />
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: step >= 3 ? 1 : 0.4 }}>
             <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: step === 3 ? 'var(--primary-blue)' : 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.85rem' }}>3</span>
-            <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Hardware Specifications</span>
+            <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{t('step3_title')}</span>
           </div>
         </div>
 
@@ -168,7 +171,7 @@ export const CameraRegistrationForm: React.FC = () => {
           {step === 1 && (
             <div>
               <h3 style={{ fontSize: '1rem', color: 'var(--primary-cyan)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <UserCheck size={18} /> Step 1: Camera Ownership & Contact Identity
+                <UserCheck size={18} /> {t('step1_header')}
               </h3>
 
               {/* Ownership Type Selection Cards */}
@@ -186,10 +189,10 @@ export const CameraRegistrationForm: React.FC = () => {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                     <Shield size={20} color="#3b82f6" />
-                    <strong style={{ fontSize: '1rem', color: '#93c5fd' }}>Public CCTV Camera</strong>
+                    <strong style={{ fontSize: '1rem', color: '#93c5fd' }}>{t('public_camera')}</strong>
                   </div>
                   <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                    Owned by Municipality, Police Department, Traffic Bureau, or Public Agency.
+                    {t('public_camera_desc')}
                   </p>
                 </div>
 
@@ -206,10 +209,10 @@ export const CameraRegistrationForm: React.FC = () => {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                     <Globe size={20} color="#a855f7" />
-                    <strong style={{ fontSize: '1rem', color: '#d8b4fe' }}>Private CCTV Camera</strong>
+                    <strong style={{ fontSize: '1rem', color: '#d8b4fe' }}>{t('private_camera')}</strong>
                   </div>
                   <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                    Owned by Business Entity, Commercial Facility, Shopping Mall, Hotel, or Resident.
+                    {t('private_camera_desc')}
                   </p>
                 </div>
               </div>
@@ -218,7 +221,7 @@ export const CameraRegistrationForm: React.FC = () => {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 
                 <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                  <label className="form-label">Camera Identifier Name *</label>
+                  <label className="form-label">{t('camera_name')}</label>
                   <input 
                     type="text" 
                     className="form-input" 
@@ -230,7 +233,7 @@ export const CameraRegistrationForm: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Registered Owner / Organization Name *</label>
+                  <label className="form-label">{t('owner_org_name')}</label>
                   <input 
                     type="text" 
                     className="form-input" 
@@ -242,7 +245,7 @@ export const CameraRegistrationForm: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Emergency Phone Number</label>
+                  <label className="form-label">{t('emergency_phone')}</label>
                   <input 
                     type="text" 
                     className="form-input" 
@@ -253,7 +256,7 @@ export const CameraRegistrationForm: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Official Contact Email</label>
+                  <label className="form-label">{t('contact_email')}</label>
                   <input 
                     type="email" 
                     className="form-input" 
@@ -265,7 +268,7 @@ export const CameraRegistrationForm: React.FC = () => {
 
                 {ownership === 'public' && (
                   <div className="form-group">
-                    <label className="form-label">Officer Badge ID</label>
+                    <label className="form-label">{t('badge_id')}</label>
                     <input 
                       type="text" 
                       className="form-input" 
@@ -284,7 +287,7 @@ export const CameraRegistrationForm: React.FC = () => {
                       onChange={(e) => setConsentLawEnforcement(e.target.checked)}
                       style={{ width: '16px', height: '16px', accentColor: 'var(--primary-blue)' }}
                     />
-                    <span>Opt-in to allow Law Enforcement Officers to submit digital footage requests during active incident investigations.</span>
+                    <span>{t('consent_label')}</span>
                   </label>
                 </div>
 
@@ -292,7 +295,7 @@ export const CameraRegistrationForm: React.FC = () => {
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
                 <button type="button" className="btn btn-primary" onClick={() => setStep(2)}>
-                  Next Step: GIS Location <ArrowRight size={16} />
+                  {t('next_step_gis')} <ArrowRight size={16} />
                 </button>
               </div>
             </div>
@@ -302,33 +305,33 @@ export const CameraRegistrationForm: React.FC = () => {
           {step === 2 && (
             <div>
               <h3 style={{ fontSize: '1rem', color: 'var(--primary-cyan)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <MapPin size={18} /> Step 2: GIS Geographic Location & Field of View
+                <MapPin size={18} /> {t('step2_title')}
               </h3>
 
               {/* Quick Preset Location Selector */}
               <div style={{ marginBottom: '1.25rem' }}>
-                <label className="form-label">Select City Zone Preset or Enter Manual Coordinates</label>
+                <label className="form-label">{t('preset_label')}</label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                   <button 
                     type="button" 
                     className="btn btn-secondary btn-sm"
                     onClick={() => handleSelectPresetLoc(9.0152, 38.7612, 'Central Square Plaza & Main Blvd', 'Downtown Core')}
                   >
-                    📍 Downtown Central Square
+                    📍 {t('downtown_preset')}
                   </button>
                   <button 
                     type="button" 
                     className="btn btn-secondary btn-sm"
                     onClick={() => handleSelectPresetLoc(9.0205, 38.7655, '77 Financial Expressway, Tower Gate', 'Financial District')}
                   >
-                    📍 Financial District
+                    📍 {t('financial_preset')}
                   </button>
                   <button 
                     type="button" 
                     className="btn btn-secondary btn-sm"
                     onClick={() => handleSelectPresetLoc(9.0090, 38.7650, 'Grand Highway & 4th Ave Overpass', 'East District')}
                   >
-                    📍 East Highway Overpass
+                    📍 {t('east_preset')}
                   </button>
                 </div>
               </div>
@@ -336,7 +339,7 @@ export const CameraRegistrationForm: React.FC = () => {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 
                 <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                  <label className="form-label">Physical Street Address *</label>
+                  <label className="form-label">{t('address_label')}</label>
                   <input 
                     type="text" 
                     className="form-input" 
@@ -348,7 +351,7 @@ export const CameraRegistrationForm: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">District / Municipality Zone</label>
+                  <label className="form-label">{t('district_label')}</label>
                   <select 
                     className="form-select"
                     value={district}
@@ -364,7 +367,7 @@ export const CameraRegistrationForm: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">GPS Latitude</label>
+                  <label className="form-label">{t('latitude')}</label>
                   <input 
                     type="number" 
                     step="0.0001"
@@ -376,7 +379,7 @@ export const CameraRegistrationForm: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">GPS Longitude</label>
+                  <label className="form-label">{t('longitude')}</label>
                   <input 
                     type="number" 
                     step="0.0001"
@@ -391,7 +394,7 @@ export const CameraRegistrationForm: React.FC = () => {
                 <div className="form-group" style={{ gridColumn: 'span 2', background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                     <label className="form-label" style={{ marginBottom: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <Compass size={16} color="var(--primary-cyan)" /> Facing Direction Azimuth: <strong>{azimuth}°</strong>
+                      <Compass size={16} color="var(--primary-cyan)" /> {t('facing_direction')}: <strong>{azimuth}°</strong>
                     </label>
                     <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       {azimuth === 0 ? 'North (0°)' : azimuth === 90 ? 'East (90°)' : azimuth === 180 ? 'South (180°)' : azimuth === 270 ? 'West (270°)' : `${azimuth}°`}
@@ -410,7 +413,7 @@ export const CameraRegistrationForm: React.FC = () => {
 
                 {/* FOV Angle & Distance */}
                 <div className="form-group">
-                  <label className="form-label">Field of View Angle (Arc): {fovAngle}°</label>
+                  <label className="form-label">{t('fov_angle')}: {fovAngle}°</label>
                   <input 
                     type="range" 
                     min={30} 
@@ -423,7 +426,7 @@ export const CameraRegistrationForm: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Effective Coverage Distance: {fovDistance} meters</label>
+                  <label className="form-label">{t('coverage_distance')}: {fovDistance} {t('meters')}</label>
                   <input 
                     type="range" 
                     min={20} 
@@ -439,10 +442,10 @@ export const CameraRegistrationForm: React.FC = () => {
 
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1.5rem' }}>
                 <button type="button" className="btn btn-secondary" onClick={() => setStep(1)}>
-                  <ArrowLeft size={16} /> Back
+                  <ArrowLeft size={16} /> {t('back')}
                 </button>
                 <button type="button" className="btn btn-primary" onClick={() => setStep(3)}>
-                  Next Step: Hardware Specs <ArrowRight size={16} />
+                  {t('next_step_hardware')} <ArrowRight size={16} />
                 </button>
               </div>
             </div>
@@ -452,13 +455,13 @@ export const CameraRegistrationForm: React.FC = () => {
           {step === 3 && (
             <div>
               <h3 style={{ fontSize: '1rem', color: 'var(--primary-cyan)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Sliders size={18} /> Step 3: Hardware Specifications & Video Settings
+                <Sliders size={18} /> {t('step3_title')}
               </h3>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 
                 <div className="form-group">
-                  <label className="form-label">Camera Type / Form Factor</label>
+                  <label className="form-label">{t('camera_type')}</label>
                   <select 
                     className="form-select"
                     value={type}
@@ -473,7 +476,7 @@ export const CameraRegistrationForm: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Video Resolution Tier</label>
+                  <label className="form-label">{t('resolution')}</label>
                   <select 
                     className="form-select"
                     value={resolution}
@@ -487,7 +490,7 @@ export const CameraRegistrationForm: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Footage Retention Period (Days)</label>
+                  <label className="form-label">{t('retention')}</label>
                   <input 
                     type="number" 
                     min={7} 
@@ -500,7 +503,7 @@ export const CameraRegistrationForm: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">RTSP / IP Video Endpoint Stream URL (Optional)</label>
+                  <label className="form-label">{t('stream_url')}</label>
                   <input 
                     type="text" 
                     className="form-input" 
@@ -518,7 +521,7 @@ export const CameraRegistrationForm: React.FC = () => {
                       onChange={(e) => setNightVision(e.target.checked)}
                       style={{ width: '16px', height: '16px' }}
                     />
-                    <span>Night Vision / Infrared (IR) Capable</span>
+                    <span>{t('night_vision')}</span>
                   </label>
 
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
@@ -528,7 +531,7 @@ export const CameraRegistrationForm: React.FC = () => {
                       onChange={(e) => setPtzCapable(e.target.checked)}
                       style={{ width: '16px', height: '16px' }}
                     />
-                    <span>Remote PTZ (Pan-Tilt-Zoom) Control</span>
+                    <span>{t('ptz_control')}</span>
                   </label>
                 </div>
 
@@ -536,16 +539,17 @@ export const CameraRegistrationForm: React.FC = () => {
 
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}>
                 <button type="button" className="btn btn-secondary" onClick={() => setStep(2)}>
-                  <ArrowLeft size={16} /> Back
+                  <ArrowLeft size={16} /> {t('back')}
                 </button>
                 
                 <button type="submit" className="btn btn-primary" style={{ padding: '0.75rem 2rem' }}>
-                  <CheckCircle2 size={18} /> Complete & Register Camera
+                  <CheckCircle2 size={18} /> {t('complete_registration')}
                 </button>
               </div>
 
             </div>
           )}
+
 
         </form>
 
