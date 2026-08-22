@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useCctv } from '../context/CctvContext';
+import { useLanguage } from '../context/LanguageContext';
 import { AuthModal } from './AuthModal';
 import { 
   Shield, 
@@ -12,7 +13,8 @@ import {
   Database,
   UserCheck,
   LogIn,
-  LogOut
+  LogOut,
+  Languages
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -31,6 +33,8 @@ export const Navbar: React.FC = () => {
     showToast
   } = useCctv();
 
+  const { language, setLanguage, t } = useLanguage();
+
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const publicCamerasCount = cameras.filter(c => c.ownership === 'public').length;
@@ -41,7 +45,7 @@ export const Navbar: React.FC = () => {
   const handleLogoutClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     logout();
-    showToast('Signed out of admin session.', 'info');
+    showToast(t('logout_success_msg') || 'Signed out successfully.', 'info');
   };
 
   return (
@@ -69,7 +73,7 @@ export const Navbar: React.FC = () => {
                 <h1 style={{ fontSize: '1.25rem', fontWeight: 700, background: 'linear-gradient(90deg, #ffffff, #93c5fd)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                   GuardianGIS
                 </h1>
-                <span className="badge badge-public" style={{ fontSize: '0.65rem' }}>CCTV HUB v2.5</span>
+                <span className="badge badge-public" style={{ fontSize: '0.65rem' }}>{t('hub_version')}</span>
                 
                 {/* Database Connection Badge */}
                 <div 
@@ -98,11 +102,11 @@ export const Navbar: React.FC = () => {
                   }}
                 >
                   <Database size={11} className={isDbSyncing ? 'spin-animation' : ''} />
-                  <span>{dbConnectionStatus === 'connected' ? 'SUPABASE LIVE' : 'LOCAL DB'}</span>
+                  <span>{dbConnectionStatus === 'connected' ? t('connected_supabase') : t('local_db')}</span>
                 </div>
               </div>
               <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                Public & Private CCTV Registration, Reporting & GIS System
+                {t('tagline')}
               </p>
             </div>
           </div>
@@ -116,7 +120,7 @@ export const Navbar: React.FC = () => {
                 onClick={() => setActiveTab('map')}
               >
                 <Map size={16} />
-                <span>GIS Map View</span>
+                <span>{t('gis_map_view')}</span>
               </button>
               
               {/* Guarded Admin Tabs: Only show Register Camera if not pure public */}
@@ -127,7 +131,7 @@ export const Navbar: React.FC = () => {
                   onClick={() => setActiveTab('register')}
                 >
                   <PlusCircle size={16} />
-                  <span>Register Camera</span>
+                  <span>{t('register_camera')}</span>
                 </button>
               )}
               
@@ -137,7 +141,7 @@ export const Navbar: React.FC = () => {
                 onClick={() => setActiveTab('incidents')}
               >
                 <AlertTriangle size={16} />
-                <span>Incident Log</span>
+                <span>{t('incident_log')}</span>
                 {openIncidentsCount > 0 && (
                   <span style={{ 
                     background: '#ef4444', 
@@ -161,7 +165,7 @@ export const Navbar: React.FC = () => {
                     onClick={() => setActiveTab('approvals')}
                   >
                     <UserCheck size={16} />
-                    <span>Approvals</span>
+                    <span>{t('approvals')}</span>
                     {pendingApprovalsCount > 0 && (
                       <span style={{ 
                         background: '#f59e0b', 
@@ -182,24 +186,46 @@ export const Navbar: React.FC = () => {
                     onClick={() => setActiveTab('analytics')}
                   >
                     <BarChart3 size={16} />
-                    <span>Analytics</span>
+                    <span>{t('analytics')}</span>
                   </button>
                 </>
               )}
             </nav>
           </div>
 
-          {/* Right Section: Role Switcher & System Telemetry */}
+          {/* Right Section: Language Switcher & Auth */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             
+            {/* Language Selection Dropdown */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.3rem 0.6rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+              <Languages size={16} color="var(--primary-cyan)" />
+              <select 
+                value={language}
+                onChange={(e) => setLanguage(e.target.value as any)}
+                style={{ 
+                  background: 'transparent', 
+                  color: '#fff', 
+                  border: 'none', 
+                  fontSize: '0.85rem', 
+                  outline: 'none', 
+                  cursor: 'pointer',
+                  fontWeight: 600
+                }}
+              >
+                <option value="en" style={{ background: '#111827' }}>EN</option>
+                <option value="am" style={{ background: '#111827' }}>አማ</option>
+                <option value="om" style={{ background: '#111827' }}>ORM</option>
+              </select>
+            </div>
+
             {/* Quick Telemetry Pills */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem' }} className="desktop-only">
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#93c5fd' }}>
-                <Camera size={13} /> Public: {publicCamerasCount}
+                <Camera size={13} /> {t('public')}: {publicCamerasCount}
               </span>
               <span style={{ color: 'var(--border-color)' }}>|</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#d8b4fe' }}>
-                <Camera size={13} /> Private: {privateCamerasCount}
+                <Camera size={13} /> {t('private')}: {privateCamerasCount}
               </span>
             </div>
 
@@ -220,10 +246,10 @@ export const Navbar: React.FC = () => {
                 {currentUser ? <UserCheck size={16} color={userRole === 'admin' ? '#93c5fd' : '#d8b4fe'} /> : <LogIn size={16} />}
                 <div style={{ textAlign: 'left', lineHeight: 1.2 }}>
                   <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#fff' }}>
-                    {currentUser ? currentUser.name : 'Sign In'}
+                    {currentUser ? currentUser.name : t('sign_in')}
                   </div>
                   <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
-                    {userRole.replace('_', ' ').toUpperCase()}
+                    {t(userRole) || userRole.replace('_', ' ').toUpperCase()}
                   </div>
                 </div>
               </button>
@@ -233,7 +259,7 @@ export const Navbar: React.FC = () => {
                 <button
                   className="btn btn-danger btn-sm"
                   onClick={handleLogoutClick}
-                  title="Sign Out / Logout of Session"
+                  title={t('logout')}
                   style={{ 
                     padding: '0.45rem 0.65rem',
                     fontSize: '0.75rem',
@@ -244,7 +270,7 @@ export const Navbar: React.FC = () => {
                   }}
                 >
                   <LogOut size={14} />
-                  <span className="desktop-only">Logout</span>
+                  <span className="desktop-only">{t('logout')}</span>
                 </button>
               )}
             </div>
@@ -253,6 +279,13 @@ export const Navbar: React.FC = () => {
 
         </div>
       </header>
+
+      {/* Global Auth Modal */}
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+    </>
+  );
+};
+
 
       {/* Global Auth Modal */}
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
