@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useCctv } from '../context/CctvContext';
 import { useLanguage } from '../context/LanguageContext';
 import { AuthModal } from './AuthModal';
+
 import { 
   Shield, 
   Map, 
@@ -21,10 +23,7 @@ export const Navbar: React.FC = () => {
   const { 
     currentUser,
     userRole, 
-    activeTab, 
-    setActiveTab, 
     cameras,
-    visibleCameras, 
     incidents, 
     dbConnectionStatus,
     isDbSyncing,
@@ -33,9 +32,13 @@ export const Navbar: React.FC = () => {
     showToast
   } = useCctv();
 
+  const navigate = useNavigate();
+  const location = useLocation();
   const { language, setLanguage, t } = useLanguage();
 
+  const activePath = location.pathname;
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
 
   const publicCamerasCount = cameras.filter(c => c.ownership === 'public').length;
   const privateCamerasCount = cameras.filter(c => c.ownership === 'private').length;
@@ -111,13 +114,13 @@ export const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* Navigation Tabs */}
+                    {/* Navigation Tabs */}
           <div className="nav-tabs-wrapper">
             <nav style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(11, 15, 25, 0.7)', padding: '0.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
               <button 
-                className={`btn ${activeTab === 'map' ? 'btn-primary' : 'btn-secondary'}`}
+                className={`btn ${activePath === '/map' ? 'btn-primary' : 'btn-secondary'}`}
                 style={{ border: 'none' }}
-                onClick={() => setActiveTab('map')}
+                onClick={() => navigate('/map')}
               >
                 <Map size={16} />
                 <span>{t('gis_map_view')}</span>
@@ -126,9 +129,9 @@ export const Navbar: React.FC = () => {
               {/* Guarded Admin Tabs: Only show Register Camera if not pure public */}
               {userRole !== 'public' && (
                 <button 
-                  className={`btn ${activeTab === 'register' ? 'btn-primary' : 'btn-secondary'}`}
+                  className={`btn ${activePath === '/register' ? 'btn-primary' : 'btn-secondary'}`}
                   style={{ border: 'none' }}
-                  onClick={() => setActiveTab('register')}
+                  onClick={() => navigate('/register')}
                 >
                   <PlusCircle size={16} />
                   <span>{t('register_camera')}</span>
@@ -136,9 +139,9 @@ export const Navbar: React.FC = () => {
               )}
               
               <button 
-                className={`btn ${activeTab === 'incidents' ? 'btn-primary' : 'btn-secondary'}`}
+                className={`btn ${activePath === '/incidents' ? 'btn-primary' : 'btn-secondary'}`}
                 style={{ border: 'none' }}
-                onClick={() => setActiveTab('incidents')}
+                onClick={() => navigate('/incidents')}
               >
                 <AlertTriangle size={16} />
                 <span>{t('incident_log')}</span>
@@ -160,9 +163,9 @@ export const Navbar: React.FC = () => {
               {userRole === 'admin' && (
                 <>
                   <button 
-                    className={`btn ${activeTab === 'approvals' ? 'btn-primary' : 'btn-secondary'}`}
+                    className={`btn ${activePath === '/approvals' ? 'btn-primary' : 'btn-secondary'}`}
                     style={{ border: 'none' }}
-                    onClick={() => setActiveTab('approvals')}
+                    onClick={() => navigate('/approvals')}
                   >
                     <UserCheck size={16} />
                     <span>{t('approvals')}</span>
@@ -181,9 +184,9 @@ export const Navbar: React.FC = () => {
                   </button>
 
                   <button 
-                    className={`btn ${activeTab === 'analytics' ? 'btn-primary' : 'btn-secondary'}`}
+                    className={`btn ${activePath === '/analytics' ? 'btn-primary' : 'btn-secondary'}`}
                     style={{ border: 'none' }}
-                    onClick={() => setActiveTab('analytics')}
+                    onClick={() => navigate('/analytics')}
                   >
                     <BarChart3 size={16} />
                     <span>{t('analytics')}</span>
@@ -192,6 +195,7 @@ export const Navbar: React.FC = () => {
               )}
             </nav>
           </div>
+
 
           {/* Right Section: Language Switcher & Auth */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>

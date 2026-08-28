@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, Polygon, Circle, useMap, useMapEvents } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import { useCctv } from '../context/CctvContext';
+import { useLanguage } from '../context/LanguageContext';
 import type { CctvCamera } from '../types/cctv';
 import L from 'leaflet';
 import { 
@@ -14,8 +17,11 @@ import {
   Eye,
   EyeOff,
   Maximize2,
-  X
+  X,
+  Languages
 } from 'lucide-react';
+
+
 
 // Tile Layer URLs
 const TILE_LAYERS = {
@@ -46,7 +52,10 @@ export const GisMap: React.FC = () => {
     userRole
   } = useCctv();
 
+    const { t } = useLanguage();
+
   const mapContainerRef = useRef<HTMLDivElement>(null);
+
   const leafletMapRef = useRef<L.Map | null>(null);
   const markersLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const fovLayerGroupRef = useRef<L.LayerGroup | null>(null);
