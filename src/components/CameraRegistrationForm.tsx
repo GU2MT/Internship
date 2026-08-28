@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCctv } from '../context/CctvContext';
 import { useLanguage } from '../context/LanguageContext';
 import type { OwnershipType, CameraType, Resolution, CameraStatus } from '../types/cctv';
+import { useNavigate } from 'react-router-dom';
 import { 
   Shield, 
   MapPin, 
@@ -16,9 +17,12 @@ import {
   Database
 } from 'lucide-react';
 
+
 export const CameraRegistrationForm: React.FC = () => {
-  const { addCamera, setActiveTab, setSelectedCamera, userRole, dbConnectionStatus, currentUser } = useCctv();
+  const { addCamera, setSelectedCamera, userRole, dbConnectionStatus, currentUser } = useCctv();
+  const navigate = useNavigate();
   const { t } = useLanguage();
+
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
 
@@ -85,9 +89,10 @@ export const CameraRegistrationForm: React.FC = () => {
       badgeId: badgeId || undefined,
     });
 
-    setSelectedCamera(created);
-    setActiveTab('map');
+        setSelectedCamera(created);
+    navigate('/map');
   };
+
 
   // Preset location quick selection
   const handleSelectPresetLoc = (presetLat: number, presetLng: number, presetAddress: string, presetDistrict: string) => {
