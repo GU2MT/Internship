@@ -17,15 +17,12 @@ import {
   Database
 } from 'lucide-react';
 
-
 export const CameraRegistrationForm: React.FC = () => {
   const { addCamera, setSelectedCamera, userRole, dbConnectionStatus, currentUser } = useCctv();
   const navigate = useNavigate();
   const { t } = useLanguage();
 
-
   const [step, setStep] = useState<1 | 2 | 3>(1);
-
 
   // Form State
   const [ownership, setOwnership] = useState<OwnershipType>(userRole === 'private_owner' ? 'private' : 'public');
@@ -60,7 +57,7 @@ export const CameraRegistrationForm: React.FC = () => {
     e.preventDefault();
 
     if (!name || !address || !ownerName) {
-      alert('Please complete all required fields.');
+      alert(t('alert_fill_required') || 'Please complete all required fields.');
       return;
     }
 
@@ -89,10 +86,9 @@ export const CameraRegistrationForm: React.FC = () => {
       badgeId: badgeId || undefined,
     });
 
-        setSelectedCamera(created);
+    setSelectedCamera(created);
     navigate('/map');
   };
-
 
   // Preset location quick selection
   const handleSelectPresetLoc = (presetLat: number, presetLng: number, presetAddress: string, presetDistrict: string) => {
@@ -108,7 +104,7 @@ export const CameraRegistrationForm: React.FC = () => {
       {/* Container Panel */}
       <div className="glass-panel" style={{ padding: '2rem' }}>
         
-                {/* Title */}
+        {/* Title */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>
           <div>
             <span className="badge badge-public" style={{ marginBottom: '0.4rem' }}>
@@ -144,9 +140,9 @@ export const CameraRegistrationForm: React.FC = () => {
           <div>
             <strong>{t('storage_target')}: </strong>
             {dbConnectionStatus === 'connected' ? (
-              <span>Registered cameras will be persisted directly to <strong>Supabase PostgreSQL Database</strong> (Table: <code>cameras</code>) with Realtime broadcast.</span>
+              <span>{t('db_supabase_connected')}</span>
             ) : (
-              <span>Supabase environment unconfigured. Cameras will be stored in <strong>Local Storage Fallback</strong>. (Add <code>VITE_SUPABASE_URL</code> to <code>.env</code> to connect Supabase).</span>
+              <span>{t('db_local_fallback')}</span>
             )}
           </div>
         </div>
@@ -554,7 +550,6 @@ export const CameraRegistrationForm: React.FC = () => {
 
             </div>
           )}
-
 
         </form>
 
